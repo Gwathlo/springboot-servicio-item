@@ -3,7 +3,6 @@ package com.formacionbdi.springboot.app.item.models.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.formacionbdi.springboot.app.item.clientes.ProductoClienteRest;
@@ -13,7 +12,6 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
-@Primary
 public class ItemServiceImplFeign implements ItemService {
 
 	public ProductoClienteRest productoClienteRest;
