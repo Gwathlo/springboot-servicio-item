@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 @RestController
 public class ItemController {
 
+	//@Qualifier("kjkjk") alternativa a @Primary, definint @Service("serviceRestTemplate" o "serviceFeign")
 	public ItemService itemService;
 	
 	@GetMapping("/listar")
