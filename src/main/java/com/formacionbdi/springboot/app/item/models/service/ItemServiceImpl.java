@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,7 +16,6 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
-@Primary
 public class ItemServiceImpl implements ItemService {
 
 	public RestTemplate clienteRest;
