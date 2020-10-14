@@ -1,7 +1,16 @@
 package com.formacionbdi.springboot.app.item.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,12 +22,17 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 import lombok.AllArgsConstructor;
 
+@RefreshScope
 @AllArgsConstructor
 @RestController
 public class ItemController {
 
+	private static Logger log = LoggerFactory.getLogger(ItemController.class);
+	
 	//@Qualifier("kjkjk") alternativa a @Primary, definint @Service("serviceRestTemplate" o "serviceFeign")
 	public ItemService itemService;
+	
+	public Environment env;
 	
 	@GetMapping("/listar")
 	public List<Item> listar() {
@@ -34,5 +48,21 @@ public class ItemController {
 	public Item metodoAlternativo(Long id, Integer cantidad) {
 		Producto producto = Producto.builder().id(id).nombre("Camara Sony").precio(500.00).build();
 		return Item.builder().producto(producto).cantidad(cantidad).build();
+	}
+	
+	@GetMapping("/obtener-config")
+	public ResponseEntity<?> obtenerConfig(@Value("${configuracion.texto}") String texto, @Value("${server.port}") String puerto) {
+		log.info(texto);
+		Map<String, String> json = new HashMap<>();
+		json.put("texto", texto);
+		json.put("puerto", puerto);
+		
+		if(env != null && env.getActiveProfiles().length > 0 && env.getActiveProfiles()[0].equalsIgnoreCase("dev")) {
+			json.put("autor.nombre", env.getProperty("configuracion.autor.nombre"));
+			json.put("autor.email", env.getProperty("configuracion.autor.email"));
+		}
+		
+		
+		return new ResponseEntity<Map<String,String>>(json,HttpStatus.OK);
 	}
 }
